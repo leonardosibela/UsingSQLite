@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">UsingSQL</string>
+
+    <string name="label_title">Title</string>
+    <string name="label_add">Add</string>
+    <string name="book_could_not_be_saved">Livro não pôde ser salvo</string>
+</resources>

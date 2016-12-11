@@ -19,7 +19,7 @@ public class BookDaoSqlite implements BookDao {
     private DatabaseManager dbManager;
 
     public static final String TABLE = "books";
-    
+
     public static final String ID = "id";
     public static final String TITLE = "title";
     public static final String DESCRIPTION = "description";
@@ -53,7 +53,7 @@ public class BookDaoSqlite implements BookDao {
         Cursor cursor = sqLiteDatabase.query(TABLE, ALL_COLUMNS, null, null, null, null, null);
         cursor.moveToFirst();
 
-        while(!cursor.isAfterLast()) {
+        while (!cursor.isAfterLast()) {
             Book book = cursorToBook(cursor);
             books.add(book);
             cursor.moveToNext();
@@ -65,7 +65,7 @@ public class BookDaoSqlite implements BookDao {
 
     @Override
     public Book getBookById(long id) {
-        Cursor cursor = sqLiteDatabase.query(TABLE, ALL_COLUMNS, orderById(id), null, null, null, null);
+        Cursor cursor = sqLiteDatabase.query(TABLE, ALL_COLUMNS, orderByIdClause(), new String[]{String.valueOf(id)}, null, null, null);
         cursor.moveToFirst();
         return cursorToBook(cursor);
     }
@@ -78,19 +78,19 @@ public class BookDaoSqlite implements BookDao {
 
     @Override
     public int remove(long id) {
-        return sqLiteDatabase.delete(TABLE, orderById(id), null);
+        return sqLiteDatabase.delete(TABLE, orderByIdClause(), new String[]{String.valueOf(id)});
     }
 
     @NonNull
-    private String orderById(long id) {
-        return ID + " = " + id;
+    private String orderByIdClause() {
+        return ID + " = ? ";
     }
 
     @Override
-    public int update(Book book) {
-        ContentValues values = bookToContentValues(book);
-        return sqLiteDatabase.update(TABLE, values, orderById(book.getId()), null);
-    }
+        public int update(Book book) {
+            ContentValues values = bookToContentValues(book);
+            return sqLiteDatabase.update(TABLE, values, orderByIdClause(), new String[]{String.valueOf(book.getId())});
+        }
 
     private ContentValues bookToContentValues(Book book) {
 
